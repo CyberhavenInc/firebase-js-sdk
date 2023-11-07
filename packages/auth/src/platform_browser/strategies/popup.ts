@@ -83,13 +83,13 @@ export const _POLL_WINDOW_CLOSE_TIMEOUT = new Delay(2000, 10000);
  * Non-OAuth providers like {@link EmailAuthProvider} will throw an error.
  * @param resolver - An instance of {@link PopupRedirectResolver}, optional
  * if already supplied to {@link initializeAuth} or provided by {@link getAuth}.
- *
  * @public
  */
 export async function signInWithPopup(
   auth: Auth,
   provider: AuthProvider,
-  resolver?: PopupRedirectResolver
+  resolver?: PopupRedirectResolver,
+  userCancellationTimeout?: number
 ): Promise<UserCredential> {
   const authInternal = _castAuth(auth);
   _assertInstanceOf(auth, provider, FederatedAuthProvider);
@@ -98,7 +98,9 @@ export async function signInWithPopup(
     authInternal,
     AuthEventType.SIGN_IN_VIA_POPUP,
     provider,
-    resolverInternal
+    resolverInternal,
+    undefined,
+    userCancellationTimeout
   );
   return action.executeNotNull();
 }
@@ -133,7 +135,8 @@ export async function signInWithPopup(
 export async function reauthenticateWithPopup(
   user: User,
   provider: AuthProvider,
-  resolver?: PopupRedirectResolver
+  resolver?: PopupRedirectResolver,
+  userCancellationTimeout?: number
 ): Promise<UserCredential> {
   const userInternal = getModularInstance(user) as UserInternal;
   _assertInstanceOf(userInternal.auth, provider, FederatedAuthProvider);
@@ -143,7 +146,8 @@ export async function reauthenticateWithPopup(
     AuthEventType.REAUTH_VIA_POPUP,
     provider,
     resolverInternal,
-    userInternal
+    userInternal,
+    userCancellationTimeout
   );
   return action.executeNotNull();
 }
@@ -176,7 +180,8 @@ export async function reauthenticateWithPopup(
 export async function linkWithPopup(
   user: User,
   provider: AuthProvider,
-  resolver?: PopupRedirectResolver
+  resolver?: PopupRedirectResolver,
+  userCancellationTimeout?: number
 ): Promise<UserCredential> {
   const userInternal = getModularInstance(user) as UserInternal;
   _assertInstanceOf(userInternal.auth, provider, FederatedAuthProvider);
@@ -187,7 +192,8 @@ export async function linkWithPopup(
     AuthEventType.LINK_VIA_POPUP,
     provider,
     resolverInternal,
-    userInternal
+    userInternal,
+    userCancellationTimeout
   );
   return action.executeNotNull();
 }
@@ -209,7 +215,8 @@ class PopupOperation extends AbstractPopupRedirectOperation {
     filter: AuthEventType,
     private readonly provider: AuthProvider,
     resolver: PopupRedirectResolverInternal,
-    user?: UserInternal
+    user?: UserInternal,
+    private userCancellationTimeout?: number
   ) {
     super(auth, filter, resolver, user);
     if (PopupOperation.currentPopupAction) {
@@ -297,7 +304,7 @@ class PopupOperation extends AbstractPopupRedirectOperation {
           this.reject(
             _createError(this.auth, AuthErrorCode.POPUP_CLOSED_BY_USER)
           );
-        }, _Timeout.AUTH_EVENT);
+        }, this.userCancellationTimeout ?? _Timeout.AUTH_EVENT);
         return;
       }
 
