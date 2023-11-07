@@ -1,6 +1,6 @@
 {
   "name": "firebase-firestore-integration-test",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "build:deps": "lerna run --scope @firebase/'{app,firestore}' --include-dependencies build",
@@ -14,8 +14,8 @@
     "test:memory:debug": "yarn build:memory; karma start --auto-watch --browsers Chrome"
   },
   "dependencies": {
-    "@firebase/app": "0.9.22",
-    "@firebase/firestore": "4.3.2"
+    "@firebase/app": "^0.9.23",
+    "@firebase/firestore": "^4.3.3"
   },
   "devDependencies": {
     "@types/mocha": "9.1.1",

@@ -1,13 +1,13 @@
 {
   "name": "firebase-compat-typings-test",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "test": "tsc",
     "test:ci": "node ../../scripts/run_tests_in_ci.js -s test"
   },
   "dependencies": {
-    "firebase": "*"
+    "firebase": "^10.5.3"
   },
   "devDependencies": {
     "typescript": "4.7.4"

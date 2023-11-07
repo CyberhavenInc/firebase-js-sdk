@@ -1,16 +1,16 @@
 {
   "name": "firebase-namespace-integration-test",
   "private": true,
-  "version": "0.2.1",
+  "version": "0.2.2",
   "scripts": {
     "test": "karma start --single-run",
     "test:ci": "node ../../scripts/run_tests_in_ci.js -s test"
   },
   "devDependencies": {
-    "firebase": "10.5.2",
     "@types/chai": "4.3.5",
     "@types/mocha": "9.1.1",
     "chai": "4.3.7",
+    "firebase": "^10.5.3",
     "karma": "6.4.2",
     "karma-babel-preprocessor": "8.0.2",
     "karma-chrome-launcher": "3.2.0",
